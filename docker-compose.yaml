@@ -1,0 +1,29 @@
+# https://www.builtydata.com/
+# author: Harut Grigoryan
+
+# Docker compose to run the 
+# builty docker image locally
+# 
+# Build the docker image:
+# docker-compose build
+# 
+# Run the docker container:
+# docker-compose up -d
+#
+# Stop the container:
+# docker-compose down
+
+version: '3.2'
+services:
+  osm_retriever:
+      image: osm_retriever
+      build:
+        dockerfile: ${PWD}/Dockerfile
+        context: ${PWD}
+      volumes:
+        - $HOME/.aws/credentials:/root/.aws/credentials
+        - ${PWD}/logs:/logs
+      environment:
+        - LOCAL_RUN='True'
+      env_file:
+        - ${PWD}/.env
