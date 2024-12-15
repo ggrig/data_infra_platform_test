@@ -70,9 +70,9 @@ if __name__ == '__main__':
         y = 0
         awq = BuchungWriter(context='')
         while y < len(data):
-            y += 500
+            y += 50
             print(awq.run(data[x:y]))
-            x += 500
+            x += 50
             logger.info('\n\n\n-------------------------------------------------------\n\n\n')
 
     logger.info("Job completed")
