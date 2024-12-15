@@ -7,6 +7,18 @@ areas = [
     "New York, New York, USA",
     "LA, CA, USA",
     "SF, CA, USA",
+    "Chicago, IL, USA",
+    "Houston, TX, USA",
+    # "Phoenix, AZ, USA",
+    "Philadelphia[d], PA, USA",
+    "San Antonio, TX, USA",
+    "San Diego, CA, USA",
+    "Dallas, TX, USA",
+    "Jacksonville[e, FL, USA",
+    "Austin, TX, USA",
+    "Fort Worth, TX, USA",
+    "San Jose, CA, USA",
+    "Seattle, WA, USA",
     # Add more states as needed
 ]
 
