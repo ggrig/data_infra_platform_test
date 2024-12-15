@@ -64,16 +64,15 @@ if __name__ == '__main__':
 
     # Iterate over the list of states and fetch data
     for area_name in areas:
-        data = fetch_and_append_state_data(area_name)[:100].to_geo_dict()['features']
-        # logger.info(data)
-        awq = BuchungWriter(context='')
-        # print(awq.run(data))
+        data = fetch_and_append_state_data(area_name).to_geo_dict()['features']
+        logger.info(f'data length = {len(data)}')
         x = 0
-        y = 10
-        while y <= 100:
+        y = 0
+        awq = BuchungWriter(context='')
+        while y < len(data):
+            y += 500
             print(awq.run(data[x:y]))
-            x += 10
-            y += 10
+            x += 500
             logger.info('\n\n\n-------------------------------------------------------\n\n\n')
 
     logger.info("Job completed")
