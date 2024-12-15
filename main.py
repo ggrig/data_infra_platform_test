@@ -1,6 +1,10 @@
+from BuchungWriter import BuchungWriter
 import osmnx as ox
 import geopandas as gpd
 import pandas as pd
+
+import logging
+logger = logging.getLogger(__name__)
 
 # List of states to retrieve data for
 areas = [
@@ -30,7 +34,7 @@ def transform_string(original_string):
 
 # Function to fetch and append data for each state
 def fetch_and_append_state_data(area_name):
-    print(f"Fetching data for {area_name}")
+    logger.info(f"Fetching data for {area_name}")
     try:
         nodes = []
         edges = []
@@ -40,15 +44,36 @@ def fetch_and_append_state_data(area_name):
         nodes, edges = ox.graph_to_gdfs(graph)
 
         # Save combined data to CSV files
-        nodes.to_csv(transform_string(area_name) + '_nodes.csv', index=False)
-        edges.to_csv(transform_string(area_name) + '_edges.csv', index=False)
+        # nodes.to_csv(transform_string(area_name) + '_nodes.csv', index=False)
+        # edges.to_csv(transform_string(area_name) + '_edges.csv', index=False)
 
-        print(f"Finished fetching data for {area_name}")
+        logger.info(f"Finished fetching data for {area_name}")
+        return edges
+
     except Exception as e:
-        print(f"An error occurred while fetching data for {area_name}: {e}")
+        logger.error(f"An error occurred while fetching data for {area_name}: {e}")
 
-# Iterate over the list of states and fetch data
-for area_name in areas:
-    fetch_and_append_state_data(area_name)
+if __name__ == '__main__':
+    logging.basicConfig(
+        filename='log-main.log', 
+        # encoding='utf-8', 
+        level=logging.INFO,
+        format='%(asctime)s %(levelname)-8s %(message)s',
+        datefmt='%Y-%m-%d %H:%M:%S'
+    )
 
-print("Job completed")
+    # Iterate over the list of states and fetch data
+    for area_name in areas:
+        data = fetch_and_append_state_data(area_name)[:100].to_geo_dict()['features']
+        # logger.info(data)
+        awq = BuchungWriter(context='')
+        # print(awq.run(data))
+        x = 0
+        y = 10
+        while y <= 100:
+            print(awq.run(data[x:y]))
+            x += 10
+            y += 10
+            logger.info('\n\n\n-------------------------------------------------------\n\n\n')
+
+    logger.info("Job completed")

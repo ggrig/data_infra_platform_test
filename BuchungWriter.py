@@ -51,22 +51,150 @@ class BuchungWriter(AthenaWriter):
         for i in payload:
             
             row = {}
-
-            row['osmid']    = i['properties']['osmid']
-            row['highway']  = i['properties']['highway']
-            row['maxspeed'] = i['properties']['maxspeed']
-            row['name']     = i['properties']['name']
-            row['oneway']   = i['properties']['oneway']
-            row['reversed'] = i['properties']['reversed']
-            row['length']   = i['properties']['length']
-            row['geometry'] = str(i['geometry']['coordinates'])
-            row['lanes']    = i['properties']['lanes']
-            row['ref']      = i['properties']['ref']
-            row['access']   = i['properties']['access']
-            row['bridge']   = i['properties']['bridge']
-            row['tunnel']   = i['properties']['tunnel']
-            row['width']    = i['properties']['width']
-            row['junction'] = i['properties']['junction']
+# - - - - - - - - - - - - - - - - - - - -
+            if i['properties']['osmid'] is not None:
+                try:
+                    row['osmid'] = str(i['properties']['osmid'])
+                    row['osmid'] = row['osmid'].replace("'", "")
+                except Exception as ex:
+                    logger.exception(ex)
+                    continue
+            else:
+                row['osmid'] = i['properties']['osmid']
+# - - - - - - - - - - - - - - - - - - - -
+            if i['properties']['highway'] is not None:
+                try:
+                    row['highway'] = str(i['properties']['highway'])
+                    row['highway'] = row['highway'].replace("'", "")
+                except Exception as ex:
+                    logger.exception(ex)
+                    continue
+            else:
+                row['highway'] = i['properties']['highway']
+# - - - - - - - - - - - - - - - - - - - -
+            if i['properties']['maxspeed'] is not None:
+                try:
+                    row['maxspeed'] = str(i['properties']['maxspeed'])
+                    row['maxspeed'] = row['maxspeed'].replace("'", "")
+                except Exception as ex:
+                    logger.exception(ex)
+                    continue
+            else:
+                row['maxspeed'] = i['properties']['maxspeed']
+# - - - - - - - - - - - - - - - - - - - -
+            if i['properties']['name'] is not None:
+                try:
+                    row['name'] = str(i['properties']['name'])
+                    row['name'] = row['name'].replace("'", "")
+                except Exception as ex:
+                    logger.exception(ex)
+                    continue
+            else:
+                row['name'] = i['properties']['name']
+# - - - - - - - - - - - - - - - - - - - -
+            if i['properties']['oneway'] is not None:
+                try:
+                    row['oneway'] = bool(i['properties']['oneway'])
+                except Exception as ex:
+                    logger.exception(ex)
+                    continue
+            else:
+                row['oneway'] = i['properties']['oneway']
+# - - - - - - - - - - - - - - - - - - - -
+            if i['properties']['reversed'] is not None:
+                try:
+                    row['reversed'] = bool(i['properties']['reversed'])
+                except Exception as ex:
+                    logger.exception(ex)
+                    continue
+            else:
+                row['reversed'] = i['properties']['reversed']
+# - - - - - - - - - - - - - - - - - - - -
+            if i['properties']['length'] is not None:
+                try:
+                    row['length'] = float(i['properties']['length'])
+                except Exception as ex:
+                    logger.exception(ex)
+                    continue
+            else:
+                row['length'] = i['properties']['length']
+# - - - - - - - - - - - - - - - - - - - -
+            if i['geometry']['coordinates'] is not None:
+                try:
+                    row['geometry'] = str(i['geometry']['coordinates'])
+                    row['geometry'] = row['geometry'].replace("'", "")
+                except Exception as ex:
+                    logger.exception(ex)
+                    continue
+            else:
+                row['geometry'] = i['geometry']['coordinates']
+# - - - - - - - - - - - - - - - - - - - -
+            if i['properties']['lanes'] is not None:
+                try:
+                    row['lanes'] = str(i['properties']['lanes'])
+                    row['lanes'] = row['lanes'].replace("'", "")
+                except Exception as ex:
+                    logger.exception(ex)
+                    continue
+            else:
+                row['lanes'] = i['properties']['lanes']
+# - - - - - - - - - - - - - - - - - - - -
+            if i['properties']['ref'] is not None:
+                try:
+                    row['ref'] = str(i['properties']['ref'])
+                    row['ref'] = row['ref'].replace("'", "")
+                except Exception as ex:
+                    logger.exception(ex)
+                    continue
+            else:
+                row['ref'] = i['properties']['ref']
+# - - - - - - - - - - - - - - - - - - - -
+            if i['properties']['access'] is not None:
+                try:
+                    row['access'] = str(i['properties']['access'])
+                    row['access'] = row['access'].replace("'", "")
+                except Exception as ex:
+                    logger.exception(ex)
+                    continue
+            else:
+                row['access'] = i['properties']['access']
+# - - - - - - - - - - - - - - - - - - - -
+            if i['properties']['bridge'] is not None:
+                try:
+                    row['bridge'] = bool(i['properties']['bridge'])
+                except Exception as ex:
+                    logger.exception(ex)
+                    continue
+            else:
+                row['bridge'] = i['properties']['bridge']
+# - - - - - - - - - - - - - - - - - - - -
+            if i['properties']['tunnel'] is not None:
+                try:
+                    row['tunnel'] = bool(i['properties']['tunnel'])
+                except Exception as ex:
+                    logger.exception(ex)
+                    continue
+            else:
+                row['tunnel'] = i['properties']['tunnel']
+# - - - - - - - - - - - - - - - - - - - -
+            if i['properties']['width'] is not None:
+                try:
+                    row['width'] = float(i['properties']['width'])
+                except Exception as ex:
+                    logger.exception(ex)
+                    continue
+            else:
+                row['width'] = i['properties']['width']
+# - - - - - - - - - - - - - - - - - - - -
+            if i['properties']['junction'] is not None:
+                try:
+                    row['junction'] = str(i['properties']['junction'])
+                    row['junction'] = row['junction'].replace("'", "")
+                except Exception as ex:
+                    logger.exception(ex)
+                    continue
+            else:
+                row['junction'] = i['properties']['junction']
             
             rows.append(row)
 
@@ -99,7 +227,7 @@ class BuchungWriter(AthenaWriter):
             count += 1
             if count > 1: values += ","
             values += "("
-            values += "null," if row['osmid'] is None else f"CAST({row['osmid']} AS varchar),"
+            values += "null," if row['osmid'] is None else f"CAST('{row['osmid']}' AS varchar),"
             values += "null," if row['highway'] is None else f"CAST('{row['highway']}' AS varchar),"
             values += "null," if row['maxspeed'] is None else f"CAST('{row['maxspeed']}' AS varchar),"
             values += "null," if row['name'] is None else f"CAST('{row['name']}' AS varchar),"
@@ -109,11 +237,11 @@ class BuchungWriter(AthenaWriter):
             values += "null," if row['geometry'] is None else f"CAST('{row['geometry']}' AS varchar),"
             values += "null," if row['lanes'] is None else f"CAST('{row['lanes']}' AS varchar),"
             values += "null," if row['ref'] is None else f"CAST('{row['ref']}' AS varchar),"
-            values += "null," if row['access'] is None else f"CAST({row['access']} AS varchar),"
+            values += "null," if row['access'] is None else f"CAST('{row['access']}' AS varchar),"
             values += "null," if row['bridge'] is None else f"CAST({row['bridge']} AS boolean),"
             values += "null," if row['tunnel'] is None else f"CAST({row['tunnel']} AS boolean),"
             values += "null," if row['width'] is None else f"CAST({row['width']} AS double),"
-            values += "null" if row['junction'] is None else f"CAST({row['junction']} AS varchar)"
+            values += "null" if row['junction'] is None else f"CAST('{row['junction']}' AS varchar)"
             values += ")"
 
         if not count: return '', 0
