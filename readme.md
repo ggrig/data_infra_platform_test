@@ -103,9 +103,9 @@ $ cdk synth
 
 The environment variables for both local docker containers and ECS tasks are defined with the `.env` files in [congig_files](./congig_files)
 Currently defined env variables:
-`IDENTITY` - the particular crawler JSON identifier
-`STORAGE_TYPE` - the crawler storage type (S3, PostgreSQL, etc.)
+`IDENTITY` - the particular test JSON identifier
+`STORAGE_TYPE` - the test storage type (S3, PostgreSQL, etc.)
 `BASE_URL` - the scraped website base URL 
-`CRALWER_NAME` - the name of the Python module that implements the particular crawler 
+`CRALWER_NAME` - the name of the Python module that implements the particular test 
 `http_proxy` - HTTP proxy address docker container setting  
 `https_proxy` - HTTPS proxy address docker container setting

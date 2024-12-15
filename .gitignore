@@ -3,3 +3,5 @@ cache
 .DS_Store
 *.csv
 .env
+__pycache__
+cdk.out
