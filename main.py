@@ -4,21 +4,20 @@ import pandas as pd
 
 # List of states to retrieve data for
 areas = [
-    "New York, New York, USA",
-    "LA, CA, USA",
+    # "New York, New York, USA",
+    # "LA, CA, USA",
     "SF, CA, USA",
-    "Chicago, IL, USA",
-    "Houston, TX, USA",
-    # "Phoenix, AZ, USA",
-    "Philadelphia[d], PA, USA",
-    "San Antonio, TX, USA",
-    "San Diego, CA, USA",
-    "Dallas, TX, USA",
-    "Jacksonville[e, FL, USA",
-    "Austin, TX, USA",
-    "Fort Worth, TX, USA",
-    "San Jose, CA, USA",
-    "Seattle, WA, USA",
+    # "Chicago, IL, USA",
+    # "Houston, TX, USA",
+    # "Philadelphia[d], PA, USA",
+    # "San Antonio, TX, USA",
+    # "San Diego, CA, USA",
+    # "Dallas, TX, USA",
+    # "Jacksonville[e, FL, USA",
+    # "Austin, TX, USA",
+    # "Fort Worth, TX, USA",
+    # "San Jose, CA, USA",
+    # "Seattle, WA, USA",
     # Add more states as needed
 ]
 
@@ -37,7 +36,7 @@ def fetch_and_append_state_data(area_name):
         edges = []
         
         # Fetch the graph data for each state
-        graph = ox.graph_from_place(area_name, network_type='all')
+        graph = ox.graph_from_place(area_name, network_type='drive')
         nodes, edges = ox.graph_to_gdfs(graph)
 
         # Save combined data to CSV files
