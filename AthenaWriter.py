@@ -11,10 +11,12 @@ from dotenv import load_dotenv
 load_dotenv(override=True)
 
 def execute_athena_query(athena_client, query):
+    logger.info(f'query = {query}')
     try:
         # Execute the query
         response = athena_client.start_query_execution(
-            QueryString=query
+            QueryString=query,
+            ResultConfiguration = { 'OutputLocation': 's3://athena-results-ggrig/athena-results'}
         )
         
         # Get the query execution ID
@@ -44,7 +46,7 @@ def execute_athena_query(athena_client, query):
             logger.info(f'Athena write SUCCEEDED {results}')
 
     except Exception as ex:
-        logger.error(str(ex))
+        logger.error(f'{str(ex)}')
 
 # def athena_test(athena_client):
 #     query = """
@@ -74,7 +76,7 @@ class AthenaWriter():
     def init_athena_client(self, context):
         if context == 'unittest':
             logger.info(f'context = {context}')
-            self.athena_client = boto3.client("athena", region_name = 'eu-central-1')
+            self.athena_client = boto3.client("athena", region_name = 'us-west-2')
             return
 
         # sts_connection = boto3.client('sts')
@@ -91,13 +93,13 @@ class AthenaWriter():
         #     aws_secret_access_key=SECRET_KEY,
         #     aws_session_token=SESSION_TOKEN, region_name = 'eu-central-1')
         
-        ACCESS_KEY = os.environ['ATHENA_OUTPUT_LOCATION']
-        SECRET_KEY = os.environ['ATHENA_OUTPUT_LOCATION']
+        ACCESS_KEY = os.environ['ACCESS_KEY']
+        SECRET_KEY = os.environ['SECRET_KEY']
 
         self.athena_client = boto3.client('athena',
             aws_access_key_id=ACCESS_KEY,
             aws_secret_access_key=SECRET_KEY,
-            region_name = 'eu-central-1')
+            region_name = 'us-west-2')
         
     # def _has_query_succeeded(self, execution_id):
     #     if not execution_id:

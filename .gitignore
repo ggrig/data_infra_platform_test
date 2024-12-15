@@ -2,3 +2,6 @@
 cache
 .DS_Store
 *.csv
+__pycache__
+*.log
+.env
