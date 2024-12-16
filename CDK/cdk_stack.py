@@ -68,7 +68,10 @@ class LogicStack(Stack):
         logger.info(image.repository.repository_arn)
         logger.info(image.image_tag)
         
-        vpc = ec2.Vpc.from_lookup(self, 'VPC',  vpc_name=f'{config.vpc_name}')
+        vpc = ec2.Vpc(
+            self, config.vpc_name,
+            max_azs=2
+        )
 
         cluster = ecs.Cluster(
             self, 'TestECSCluster',

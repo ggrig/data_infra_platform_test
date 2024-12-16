@@ -74,7 +74,7 @@ class Config:
         return self._vpc_name()
 
     def _cdk_logic_stack_name(self)->str:
-        return ("TestECSStack")
+        return ("TestDatasetRetrievalStack")
 
     @property
     def cdk_logic_stack_name(self)->str:
