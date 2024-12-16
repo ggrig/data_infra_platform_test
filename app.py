@@ -3,11 +3,11 @@ import os
 
 import aws_cdk as cdk
 
-from lambda_stack.lambda_stack_stack import LambdaStackStack
+from ec2_stack.ec2_stack import Ec2AthenaStack
 
 
 app = cdk.App()
-LambdaStackStack(app, "LambdaStackStack",
+Ec2AthenaStack(app, "Ec2AthenaStack",
     # If you don't specify 'env', this stack will be environment-agnostic.
     # Account/Region-dependent features and context lookups will not work,
     # but a single synthesized template can be deployed anywhere.
