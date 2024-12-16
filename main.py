@@ -53,6 +53,8 @@ def fetch_and_append_state_data(area_name):
     except Exception as e:
         logger.error(f"An error occurred while fetching data for {area_name}: {e}")
 
+STEP = 100
+
 if __name__ == '__main__':
     logging.basicConfig(
         filename='log-main.log', 
@@ -67,12 +69,11 @@ if __name__ == '__main__':
         data = fetch_and_append_state_data(area_name).to_geo_dict()['features']
         logger.info(f'data length = {len(data)}')
         x = 0
-        y = 0
         awq = BuchungWriter(context='')
-        while y < len(data):
-            y += 50
-            print(awq.run(data[x:y]))
-            x += 50
-            logger.info('\n\n\n-------------------------------------------------------\n\n\n')
+        while x+STEP < len(data):
+            logger.info(awq.run(data[x:x+STEP]))
+            x += STEP
+            # logger.info('\n\n\n-------------------------------------------------------\n\n\n')
+            logger.info(f"{x}")
 
     logger.info("Job completed")
