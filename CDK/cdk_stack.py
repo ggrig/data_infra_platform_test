@@ -60,17 +60,28 @@ class LogicStack(Stack):
         super().__init__(scope, construct_id, **kwargs)
 
         logger.info(f"Docker file path {get_image_folder_path()}")
-        image = DockerImageAsset(self, 'LogicDockerImage',
+        docker_image = DockerImageAsset(self, 'LogicDockerImage',
             directory=get_image_folder_path()
         )
 
-        logger.info(image.image_uri)
-        logger.info(image.repository.repository_arn)
-        logger.info(image.image_tag)
+        logger.info(docker_image.image_uri)
+        logger.info(docker_image.repository.repository_arn)
+        logger.info(docker_image.image_tag)
         
         vpc = ec2.Vpc(
             self, config.vpc_name,
-            max_azs=2
+            max_azs=2,
+            nat_gateways=1,  # Enable a NAT gateway for internet access for private subnets
+            subnet_configuration=[
+                ec2.SubnetConfiguration(
+                    name="Public",
+                    subnet_type=ec2.SubnetType.PUBLIC,
+                ),
+                ec2.SubnetConfiguration(
+                    name="Private",
+                    subnet_type=ec2.SubnetType.PRIVATE_WITH_NAT,
+                )
+            ]        
         )
 
         cluster = ecs.Cluster(
@@ -78,21 +89,39 @@ class LogicStack(Stack):
             vpc=vpc
         )
 
-        test_data_access_role = iam.Role(self,'TestDataAccessRole',
+        task_role = iam.Role(self,'TestDataAccessRole',
             role_name='TestDataAccessRole',
             assumed_by=iam.ServicePrincipal("ecs-tasks.amazonaws.com"),
             managed_policies=[
-                iam.ManagedPolicy.from_aws_managed_policy_name("AmazonS3FullAccess"),
-                iam.ManagedPolicy.from_aws_managed_policy_name("CloudWatchFullAccess"),
-                iam.ManagedPolicy.from_aws_managed_policy_name("SecretsManagerReadWrite"),
+                iam.ManagedPolicy.from_aws_managed_policy_name("service-role/AmazonECSTaskExecutionRolePolicy"),
+                iam.ManagedPolicy.from_aws_managed_policy_name("AmazonAthenaFullAccess"),
+                # iam.ManagedPolicy.from_aws_managed_policy_name("AmazonS3FullAccess"),
+                # iam.ManagedPolicy.from_aws_managed_policy_name("CloudWatchFullAccess"),
+                # iam.ManagedPolicy.from_aws_managed_policy_name("AmazonAthenaFullAccess"),
             ]
         )
 
-        test_construct = EcsTaskBase(self,
-                                "data_retriever",
-                                cluster=cluster,
-                                repo=image.repository,
-                                image_tag=image.image_tag,
-                                dotenv_file=".env",
-                                role=test_data_access_role
-                            )
+
+        custom_image = image = ecs.ContainerImage.from_ecr_repository(repository=docker_image.repository, tag=docker_image.image_tag)
+        # Deploy a Fargate Service with custom Docker image and Athena access
+        ecs_patterns.ApplicationLoadBalancedFargateService(
+            self, "MyFargateService",
+            cluster=cluster,
+            task_image_options=ecs_patterns.ApplicationLoadBalancedTaskImageOptions(
+                image=custom_image,
+                container_name='MyContainer',
+                execution_role=task_role
+            ),
+            desired_count=2,
+            public_load_balancer=True
+        )
+
+        # test_construct = EcsTaskBase(self,
+        #                         "data_retriever",
+        #                         cluster=cluster,
+        #                         repo=image.repository,
+        #                         image_tag=image.image_tag,
+        #                         dotenv_file=".env",
+        #                         role=test_data_access_role,
+        #                         desired_count=1,
+        #                     )
