@@ -54,13 +54,13 @@ from utilities.helpers import get_env_files_path, get_image_folder_path, list_fi
 from configuration.config import Config
 
 
-class LogicStack(Stack):
+class EcsStack(Stack):
 
     def __init__(self, scope: Construct, construct_id: str, config:Config, **kwargs) -> None:
         super().__init__(scope, construct_id, **kwargs)
 
         logger.info(f"Docker file path {get_image_folder_path()}")
-        docker_image = DockerImageAsset(self, 'LogicDockerImage',
+        docker_image = DockerImageAsset(self, 'CustomDockerImage',
             directory=get_image_folder_path()
         )
 

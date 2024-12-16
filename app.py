@@ -9,13 +9,13 @@ import os
 
 import aws_cdk as cdk
 
-from CDK.cdk_stack import LogicStack
+from CDK.cdk_stack import EcsStack
 
 from configuration.config import Config
 config = Config()
 
 app = cdk.App()
-LogicStack(app, config.cdk_logic_stack_name, config, 
+EcsStack(app, config.cdk_logic_stack_name, config, 
         # If you don't specify 'env', this stack will be environment-agnostic.
         # Account/Region-dependent features and context lookups will not work,
         # but a single synthesized template can be deployed anywhere.
