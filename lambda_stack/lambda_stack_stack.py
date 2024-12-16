@@ -49,7 +49,7 @@ class LambdaStackStack(Stack):
                 iam.ManagedPolicy.from_aws_managed_policy_name("AmazonS3FullAccess"),
                 iam.ManagedPolicy.from_aws_managed_policy_name("CloudWatchFullAccess"),
                 iam.ManagedPolicy.from_aws_managed_policy_name("SecretsManagerReadWrite"),
-                iam.ManagedPolicy.from_aws_managed_policy_name("AthenaFullAccess"),
+                iam.ManagedPolicy.from_aws_managed_policy_name("AmazonAthenaFullAccess"),
             ]
         )        
 
