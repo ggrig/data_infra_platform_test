@@ -56,3 +56,9 @@ command.
  * `cdk docs`        open CDK documentation
 
 Enjoy!
+
+## SSH Connection
+
+```
+ssh -i ~/.ssh-keys/hgrig-key.pem ec2-user@ec2-54-245-18-16.us-west-2.compute.amazonaws.com
+```

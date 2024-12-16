@@ -72,4 +72,5 @@ class Ec2AthenaStack(Stack):
                      machine_image=ec2.MachineImage.latest_amazon_linux(),
                      vpc=vpc,
                      role=instance_role,
-                     security_group=sg)
+                     security_group=sg,
+                     key_name="hgrig-key")
