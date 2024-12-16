@@ -72,7 +72,7 @@ class EcsTaskBase(Construct):
                                                     execution_role=role,
                                                     task_role=role,
                                                     cpu=256,
-                                                    memory_limit_mib=512)
+                                                    memory_limit_mib=2048)
 
         # logger.info(f"Repo Name: {repo.repository_name}")
         # logger.info(f"ARN: {repo.repository_arn}")
@@ -109,7 +109,6 @@ class EcsTaskBase(Construct):
                                      service_name=service_id,
                                      task_definition=task_definition,
                                      cluster=cluster,
-                                     vpc_subnets=ec2.SubnetSelection(subnet_type=ec2.SubnetType.PRIVATE_WITH_NAT),
+                                     vpc_subnets=ec2.SubnetSelection(subnet_type=ec2.SubnetType.PRIVATE_WITH_EGRESS),
                                      assign_public_ip=False
                            )
-
