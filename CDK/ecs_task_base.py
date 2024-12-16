@@ -10,6 +10,7 @@ from aws_cdk import (
         aws_ecs as ecs,
         aws_ecr as ecr,
         aws_logs as logs,
+        aws_ec2 as ec2,
         RemovalPolicy
 )
 
@@ -104,8 +105,11 @@ class EcsTaskBase(Construct):
         service_id = f"{task_id}-Service"
         service = ecs.FargateService(self,
                                      id=service_id,
-                                     desired_count=0,
+                                     desired_count=1,
                                      service_name=service_id,
                                      task_definition=task_definition,
-                                     cluster=cluster
-                                     )
+                                     cluster=cluster,
+                                     vpc_subnets=ec2.SubnetSelection(subnet_type=ec2.SubnetType.PRIVATE_WITH_NAT),
+                                     assign_public_ip=False
+                           )
+

@@ -60,13 +60,13 @@ class EcsStack(Stack):
         super().__init__(scope, construct_id, **kwargs)
 
         logger.info(f"Docker file path {get_image_folder_path()}")
-        docker_image = DockerImageAsset(self, 'CustomDockerImage',
+        image = DockerImageAsset(self, 'CustomDockerImage',
             directory=get_image_folder_path()
         )
 
-        logger.info(docker_image.image_uri)
-        logger.info(docker_image.repository.repository_arn)
-        logger.info(docker_image.image_tag)
+        logger.info(image.image_uri)
+        logger.info(image.repository.repository_arn)
+        logger.info(image.image_tag)
         
         vpc = ec2.Vpc(
             self, config.vpc_name,
@@ -102,26 +102,25 @@ class EcsStack(Stack):
         )
 
 
-        custom_image = image = ecs.ContainerImage.from_ecr_repository(repository=docker_image.repository, tag=docker_image.image_tag)
+        # custom_image = image = ecs.ContainerImage.from_ecr_repository(repository=image.repository, tag=image.image_tag)
         # Deploy a Fargate Service with custom Docker image and Athena access
-        ecs_patterns.ApplicationLoadBalancedFargateService(
-            self, "MyFargateService",
-            cluster=cluster,
-            task_image_options=ecs_patterns.ApplicationLoadBalancedTaskImageOptions(
-                image=custom_image,
-                container_name='MyContainer',
-                execution_role=task_role
-            ),
-            desired_count=2,
-            public_load_balancer=True
-        )
+        # ecs_patterns.ApplicationLoadBalancedFargateService(
+        #     self, "MyFargateService",
+        #     cluster=cluster,
+        #     task_image_options=ecs_patterns.ApplicationLoadBalancedTaskImageOptions(
+        #         image=custom_image,
+        #         container_name='MyContainer',
+        #         execution_role=task_role
+        #     ),
+        #     desired_count=2,
+        #     public_load_balancer=True
+        # )
 
-        # test_construct = EcsTaskBase(self,
-        #                         "data_retriever",
-        #                         cluster=cluster,
-        #                         repo=image.repository,
-        #                         image_tag=image.image_tag,
-        #                         dotenv_file=".env",
-        #                         role=test_data_access_role,
-        #                         desired_count=1,
-        #                     )
+        test_construct = EcsTaskBase(self,
+                                "data_retriever",
+                                cluster=cluster,
+                                repo=image.repository,
+                                image_tag=image.image_tag,
+                                dotenv_file=".env",
+                                role=task_role,
+                            )
