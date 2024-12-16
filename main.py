@@ -1,6 +1,18 @@
 import osmnx as ox
 import geopandas as gpd
 import pandas as pd
+import logging 
+
+logging.basicConfig(
+    level=logging.INFO,
+    format='%(asctime)s %(name)s %(levelname)-8s %(message)s',
+    datefmt='%Y-%m-%d %H:%M:%S',
+    handlers=[
+        logging.StreamHandler()
+    ]
+)
+
+logger = logging.getLogger(__name__)
 
 # List of states to retrieve data for
 areas = [
@@ -30,7 +42,7 @@ def transform_string(original_string):
 
 # Function to fetch and append data for each state
 def fetch_and_append_state_data(area_name):
-    print(f"Fetching data for {area_name}")
+    logger.info(f"Fetching data for {area_name}")
     try:
         nodes = []
         edges = []
@@ -43,12 +55,12 @@ def fetch_and_append_state_data(area_name):
         nodes.to_csv(transform_string(area_name) + '_nodes.csv', index=False)
         edges.to_csv(transform_string(area_name) + '_edges.csv', index=False)
 
-        print(f"Finished fetching data for {area_name}")
+        logger.info(f"Finished fetching data for {area_name}")
     except Exception as e:
-        print(f"An error occurred while fetching data for {area_name}: {e}")
+        logger.info(f"An error occurred while fetching data for {area_name}: {e}")
 
 # Iterate over the list of states and fetch data
 for area_name in areas:
     fetch_and_append_state_data(area_name)
 
-print("Job completed")
+logger.info("Job completed")
