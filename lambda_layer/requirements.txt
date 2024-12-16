@@ -1,4 +1,4 @@
-urllib3==11.26.18
+urllib3==1.26.18
 osmnx
 geopandas
 pandas

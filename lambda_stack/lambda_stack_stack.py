@@ -22,6 +22,11 @@ from aws_cdk import (
 from aws_cdk.aws_lambda_python_alpha import PythonLayerVersion
 
 from constructs import Construct
+from dotenv import load_dotenv
+load_dotenv(override=True)
+
+import os
+athena_table = os.environ['ATHENA_TABLE_NAME_2']
 
 class LambdaStackStack(Stack):
 
@@ -62,9 +67,9 @@ class LambdaStackStack(Stack):
                                     code=lfn.Code.from_asset("./lambda"),
                                     timeout=Duration.seconds(450),
                                     role=lambda_data_access_role,
-                                    # environment={
-                                    #     "RUNTIME_AWS_REGION": aws_region,
-                                    # },
+                                    environment={
+                                        "ATHENA_TABLE_NAME_2": athena_table,
+                                    },
                                     # vpc=vpc_hrs,
                                     # vpc_subnets=vpc_subnets_selection,
                                     layers = [data_access_lambda_layer],
