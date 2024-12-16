@@ -84,22 +84,11 @@ class LogicStack(Stack):
             ]
         )
 
-        config_file_list = list_files_in_directory(get_env_files_path())
-        # only 100 tests for now because of limited resources per stack.
-        # for more info: https://github.com/builtyapp/logic/issues/11#issue-2304744616
-        # config_file_list = config_file_list[:100]
-        for config_file in config_file_list:
-
-            if config_file == '.env':
-                logger.info(f"Skipping {config_file}")
-                continue
-
-            test_name = f"test_{config_file}"
-            test_construct = EcsTaskBase(self,
-                                    test_name,
-                                    cluster=cluster,
-                                    repo=image.repository,
-                                    image_tag=image.image_tag,
-                                    dotenv_file=config_file,
-                                    role=test_data_access_role
-                                )
+        test_construct = EcsTaskBase(self,
+                                "data_retriever",
+                                cluster=cluster,
+                                repo=image.repository,
+                                image_tag=image.image_tag,
+                                dotenv_file=".env",
+                                role=test_data_access_role
+                            )

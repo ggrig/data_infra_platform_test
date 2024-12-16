@@ -17,7 +17,7 @@ import os
 import json
 from constructs import Construct
 from utilities.env_manager import list_env_variables
-from utilities.helpers import load_combined_env_files
+from dotenv import load_dotenv
 
 import logging
 logger = logging.getLogger(__name__)
@@ -45,7 +45,7 @@ class EcsTaskBase(Construct):
         for var in env_vars:
             os.environ.pop(var, None)
 
-        load_combined_env_files(dotenv_file=dotenv_file)
+        load_dotenv(dotenv_file)
 
         env_vars = list_env_variables()
         # Iterate over the list and remove each environment variable
