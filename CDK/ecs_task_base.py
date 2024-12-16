@@ -47,11 +47,11 @@ class EcsTaskBase(Construct):
 
         load_dotenv(dotenv_file)
 
-        env_vars = list_env_variables()
-        # Iterate over the list and remove each environment variable
-        logger.error("Removing environment variables")
-        for var in env_vars:
-            logger.error(var)
+        # env_vars = list_env_variables()
+        # # Iterate over the list and remove each environment variable
+        # logger.error("Removing environment variables")
+        # for var in env_vars:
+        #     logger.error(var)
 
 
         task_id = "test_task"

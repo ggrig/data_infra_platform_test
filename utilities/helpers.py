@@ -30,10 +30,8 @@ def load_combined_env_files(dotenv_file):
     combined_env_stream = combine_env_files(files=[get_base_config_file_path(), dotenv_file_full_path])
     load_dotenv(dotenv_file_full_path, encoding='utf-8')
 
-
-def get_logic_folder_path():
+def get_image_folder_path():
     return os.getcwd()
-
 
 def list_files_in_directory(directory_path):
     files = [f for f in os.listdir(directory_path) if os.path.isfile(os.path.join(directory_path, f))]

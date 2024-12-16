@@ -49,7 +49,7 @@ logging.basicConfig(
 
 from CDK.ecs_task_base import EcsTaskBase
 
-from utilities.helpers import get_env_files_path, get_logic_folder_path, list_files_in_directory
+from utilities.helpers import get_env_files_path, get_image_folder_path, list_files_in_directory
 
 from configuration.config import Config
 
@@ -59,8 +59,9 @@ class LogicStack(Stack):
     def __init__(self, scope: Construct, construct_id: str, config:Config, **kwargs) -> None:
         super().__init__(scope, construct_id, **kwargs)
 
+        logger.info(f"Docker file path {get_image_folder_path()}")
         image = DockerImageAsset(self, 'LogicDockerImage',
-            directory=get_logic_folder_path()
+            directory=get_image_folder_path()
         )
 
         logger.info(image.image_uri)
