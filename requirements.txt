@@ -1,21 +1,6 @@
+urllib3 == 1.26.18
 osmnx
 geopandas
 pandas
 boto3
 python-dotenv
-
-
-aws-cdk-lib==2.103.0
-constructs>=10.0.0,<11.0.0
-aws-cdk.aws-lambda-python-alpha
-aws-lambda-powertools
-python-dotenv
-psycopg2-binary
-boto3
-schema
-certifi >= 14.05.14
-six >= 1.10
-python_dateutil >= 2.5.3
-setuptools >= 21.0.0
-urllib3 == 1.26.6
-requests == 2.31.0

@@ -1,0 +1,11 @@
+aws-cdk-lib==2.103.0
+constructs>=10.0.0,<11.0.0
+aws-cdk.aws-lambda-python-alpha
+aws-lambda-powertools
+psycopg2-binary
+schema
+certifi >= 14.05.14
+six >= 1.10
+python_dateutil >= 2.5.3
+setuptools >= 21.0.0
+requests == 2.31.0
