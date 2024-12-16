@@ -39,11 +39,12 @@ class LambdaStackStack(Stack):
         
         lambda_data_access_role = iam.Role(self,'TestDataAccessRole',
             role_name='TestDataAccessRole',
-            assumed_by=iam.ServicePrincipal("ecs-tasks.amazonaws.com"),
+            assumed_by=iam.ServicePrincipal("lambda.amazonaws.com"),
             managed_policies=[
                 iam.ManagedPolicy.from_aws_managed_policy_name("AmazonS3FullAccess"),
                 iam.ManagedPolicy.from_aws_managed_policy_name("CloudWatchFullAccess"),
                 iam.ManagedPolicy.from_aws_managed_policy_name("SecretsManagerReadWrite"),
+                iam.ManagedPolicy.from_aws_managed_policy_name("AthenaFullAccess"),
             ]
         )        
 

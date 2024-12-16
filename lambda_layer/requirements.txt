@@ -1,5 +1,5 @@
+urllib3==11.26.18
 osmnx
 geopandas
 pandas
-boto3
 python-dotenv
