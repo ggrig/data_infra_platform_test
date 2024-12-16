@@ -1,0 +1,5 @@
+osmnx
+geopandas
+pandas
+boto3
+python-dotenv
