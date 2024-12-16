@@ -28,6 +28,8 @@ load_dotenv(override=True)
 import os
 athena_table = os.environ['ATHENA_TABLE_NAME_2']
 
+vpc_name = os.getenv ("VPC_NAME" , "")
+
 class LambdaStackStack(Stack):
 
     def __init__(self, scope: Construct, construct_id: str, **kwargs) -> None:
@@ -41,6 +43,21 @@ class LambdaStackStack(Stack):
         #     visibility_timeout=Duration.seconds(300),
         # )
 
+        rds_vpc = ec2.Vpc(
+            self, vpc_name,
+            max_azs=2
+        )
+
+        private_subnets_select = rds_vpc.select_subnets(
+            subnet_type=ec2.SubnetType.PRIVATE_WITH_EGRESS
+        )
+
+        subnets = list()
+        for subnet in private_subnets_select.subnets:
+            # commented out code: print(subnet.subnet_id)       
+            subnets.append(ec2.Subnet.from_subnet_attributes(self, subnet.subnet_id.replace("-", "").replace("_", "").replace(" ", ""), subnet_id=subnet.subnet_id))
+
+        private_subnets_selection = ec2.SubnetSelection(subnets=subnets)
         
         lambda_data_access_role = iam.Role(self,'TestDataAccessRole',
             role_name='TestDataAccessRole',
@@ -52,6 +69,19 @@ class LambdaStackStack(Stack):
                 iam.ManagedPolicy.from_aws_managed_policy_name("AmazonAthenaFullAccess"),
             ]
         )        
+
+        lambda_data_access_role.add_to_policy(
+            iam.PolicyStatement(
+                actions=[
+                    "ec2:DescribeNetworkInterfaces",
+                    "ec2:CreateNetworkInterface",
+                    "ec2:DeleteNetworkInterface",
+                    "ec2:DescribeInstances",
+                    "ec2:AttachNetworkInterface"
+                ],
+                resources=["*"]
+            )
+        )
 
         data_access_lambda_layer = PythonLayerVersion(
                 self,
@@ -70,8 +100,8 @@ class LambdaStackStack(Stack):
                                     environment={
                                         "ATHENA_TABLE_NAME_2": athena_table,
                                     },
-                                    # vpc=vpc_hrs,
-                                    # vpc_subnets=vpc_subnets_selection,
+                                    vpc=rds_vpc,
+                                    vpc_subnets=private_subnets_selection,
                                     layers = [data_access_lambda_layer],
                                     memory_size = 256,
                                     ephemeral_storage_size = Size.mebibytes(1024)

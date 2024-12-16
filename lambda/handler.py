@@ -39,9 +39,10 @@ def transform_string(original_string):
 # Function to fetch and append data for each state
 def fetch_and_append_state_data(area_name):
     logger.info(f"Fetching data for {area_name}")
+    nodes = []
+    edges = []
     try:
-        nodes = []
-        edges = []
+
         
         # Fetch the graph data for each state
         graph = ox.graph_from_place(area_name, network_type='drive')
@@ -52,10 +53,11 @@ def fetch_and_append_state_data(area_name):
         # edges.to_csv(transform_string(area_name) + '_edges.csv', index=False)
 
         logger.info(f"Finished fetching data for {area_name}")
-        return edges
 
     except Exception as e:
         logger.error(f"An error occurred while fetching data for {area_name}: {e}")
+    
+    return edges
 
 STEP = 100
 
