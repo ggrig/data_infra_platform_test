@@ -58,7 +58,7 @@ def fetch_and_append_state_data(area_name):
 
 if __name__ == '__main__':
     logging.basicConfig(
-        filename='log-main.log', 
+        filename='log-main_fv.log', 
         # encoding='utf-8', 
         level=logging.INFO,
         format='%(asctime)s %(levelname)-8s %(message)s',
@@ -67,14 +67,33 @@ if __name__ == '__main__':
 
     # Iterate over the list of states and fetch data
     for area_name in areas:
-        data = fetch_and_append_state_data(area_name).to_geo_dict()['features']
+        data = fetch_and_append_state_data(area_name)#.to_geo_dict()['features']
+        # data = data.iloc[:500]
+        # logger.info(f'\n{data}')
+        # logger.info(f'osmid = {data.iloc[0]['osmid']}')
+        # logger.info(f'highway = {data.iloc[0]['highway']}')
+        # logger.info(f'maxspeed = {data.iloc[0]['maxspeed']}')
+        # logger.info(f'name = {data.iloc[0]['name']}')
+        # logger.info(f'oneway = {data.iloc[0]['oneway']}')
+        # logger.info(f'reversed = {data.iloc[0]['reversed']}')
+        # logger.info(f'length = {data.iloc[0]['length']}')
+        # logger.info(f'geometry = {data.iloc[0]['geometry']}')
+        # logger.info(f'lanes = {data.iloc[0]['lanes']}')
+        # logger.info(f'ref = {data.iloc[0]['ref']}')
+        # logger.info(f'access = {data.iloc[0]['access']}')
+        # logger.info(f'bridge = {data.iloc[0]['bridge']}')
+        # logger.info(f'tunnel = {data.iloc[0]['tunnel']}')
+        # logger.info(f'width = {data.iloc[0]['width']}')
+        # logger.info(f'junction = {data.iloc[0]['junction']}')
+        # awq = BuchungWriter(context='')
+        # print(awq.run(data.iloc[:50]))
         logger.info(f'data length = {len(data)}')
         x = 0
         y = 0
         awq = BuchungWriter(context='')
         while y < len(data):
             y += 50
-            print(awq.run(data[x:y]))
+            print(awq.run(data.iloc[x:y]))
             x += 50
             logger.info('\n\n\n-------------------------------------------------------\n\n\n')
 

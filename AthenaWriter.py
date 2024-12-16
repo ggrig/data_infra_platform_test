@@ -11,7 +11,7 @@ from dotenv import load_dotenv
 load_dotenv(override=True)
 
 def execute_athena_query(athena_client, query):
-    logger.info(f'query = {query}')
+    # logger.info(f'query = {query}')
     try:
         # Execute the query
         response = athena_client.start_query_execution(
@@ -128,13 +128,13 @@ class AthenaWriter():
     #     logger.error(f'Timed Out Query: {execution_id} status: {status}')
     #     return False
  
-    def payload_to_rows(self, payload:list):
+    def payload_to_rows(self, payload):
             return payload
     
     def build_the_query(self, rows:list):
         return 'select current_date;', 0
     
-    def run(self, payload:list):
+    def run(self, payload):
         rows = self.payload_to_rows(payload = payload)
         query, count = self.build_the_query(rows = rows)
 

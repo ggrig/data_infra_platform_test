@@ -1,6 +1,7 @@
 import os
 import boto3
 import datetime
+import math
 
 from AthenaWriter import AthenaWriter
 
@@ -43,158 +44,162 @@ class BuchungWriter(AthenaWriter):
     #     query_execution_id = response["QueryExecutionId"]
     #     return super()._has_query_succeeded(query_execution_id)
     
-    def payload_to_rows(self, payload:list):
-        if not isinstance(payload, list): return []
+    def payload_to_rows(self, payload):
+        # if not isinstance(payload, list): return []
 
         rows = []
 
-        for i in payload:
+        for i in range(len(payload)):
             
             row = {}
 # - - - - - - - - - - - - - - - - - - - -
-            if i['properties']['osmid'] is not None:
+            if payload.iloc[i]['osmid'] is not None:
                 try:
-                    row['osmid'] = str(i['properties']['osmid'])
+                    row['osmid'] = str(payload.iloc[i]['osmid'])
                     row['osmid'] = row['osmid'].replace("'", "")
                 except Exception as ex:
                     logger.exception(ex)
                     continue
             else:
-                row['osmid'] = i['properties']['osmid']
+                row['osmid'] = payload.iloc[i]['osmid']
 # - - - - - - - - - - - - - - - - - - - -
-            if i['properties']['highway'] is not None:
+            if payload.iloc[i]['highway'] is not None:
                 try:
-                    row['highway'] = str(i['properties']['highway'])
+                    row['highway'] = str(payload.iloc[i]['highway'])
                     row['highway'] = row['highway'].replace("'", "")
                 except Exception as ex:
                     logger.exception(ex)
                     continue
             else:
-                row['highway'] = i['properties']['highway']
+                row['highway'] = payload.iloc[i]['highway']
 # - - - - - - - - - - - - - - - - - - - -
-            if i['properties']['maxspeed'] is not None:
+            if payload.iloc[i]['maxspeed'] is not None:
                 try:
-                    row['maxspeed'] = str(i['properties']['maxspeed'])
+                    row['maxspeed'] = str(payload.iloc[i]['maxspeed'])
                     row['maxspeed'] = row['maxspeed'].replace("'", "")
                 except Exception as ex:
                     logger.exception(ex)
                     continue
             else:
-                row['maxspeed'] = i['properties']['maxspeed']
+                row['maxspeed'] = payload.iloc[i]['maxspeed']
 # - - - - - - - - - - - - - - - - - - - -
-            if i['properties']['name'] is not None:
+            if payload.iloc[i]['name'] is not None:
                 try:
-                    row['name'] = str(i['properties']['name'])
+                    row['name'] = str(payload.iloc[i]['name'])
                     row['name'] = row['name'].replace("'", "")
                 except Exception as ex:
                     logger.exception(ex)
                     continue
             else:
-                row['name'] = i['properties']['name']
+                row['name'] = payload.iloc[i]['name']
 # - - - - - - - - - - - - - - - - - - - -
-            if i['properties']['oneway'] is not None:
+            if payload.iloc[i]['oneway'] is not None:
                 try:
-                    row['oneway'] = bool(i['properties']['oneway'])
+                    row['oneway'] = bool(payload.iloc[i]['oneway'])
                 except Exception as ex:
                     logger.exception(ex)
                     continue
             else:
-                row['oneway'] = i['properties']['oneway']
+                row['oneway'] = payload.iloc[i]['oneway']
 # - - - - - - - - - - - - - - - - - - - -
-            if i['properties']['reversed'] is not None:
+            if payload.iloc[i]['reversed'] is not None:
                 try:
-                    row['reversed'] = bool(i['properties']['reversed'])
+                    row['reversed'] = bool(payload.iloc[i]['reversed'])
                 except Exception as ex:
                     logger.exception(ex)
                     continue
             else:
-                row['reversed'] = i['properties']['reversed']
+                row['reversed'] = payload.iloc[i]['reversed']
 # - - - - - - - - - - - - - - - - - - - -
-            if i['properties']['length'] is not None:
+            if payload.iloc[i]['length'] is not None:
                 try:
-                    row['length'] = float(i['properties']['length'])
+                    row['length'] = float(payload.iloc[i]['length'])
+                    if math.isnan(row['length']):
+                        row['length'] = None
                 except Exception as ex:
                     logger.exception(ex)
                     continue
             else:
-                row['length'] = i['properties']['length']
+                row['length'] = payload.iloc[i]['length']
 # - - - - - - - - - - - - - - - - - - - -
-            if i['geometry']['coordinates'] is not None:
+            if payload.iloc[i]['geometry'] is not None:
                 try:
-                    row['geometry'] = str(i['geometry']['coordinates'])
+                    row['geometry'] = str(payload.iloc[i]['geometry'])
                     row['geometry'] = row['geometry'].replace("'", "")
                 except Exception as ex:
                     logger.exception(ex)
                     continue
             else:
-                row['geometry'] = i['geometry']['coordinates']
+                row['geometry'] = payload.iloc[i]['geometry']
 # - - - - - - - - - - - - - - - - - - - -
-            if i['properties']['lanes'] is not None:
+            if payload.iloc[i]['lanes'] is not None:
                 try:
-                    row['lanes'] = str(i['properties']['lanes'])
+                    row['lanes'] = str(payload.iloc[i]['lanes'])
                     row['lanes'] = row['lanes'].replace("'", "")
                 except Exception as ex:
                     logger.exception(ex)
                     continue
             else:
-                row['lanes'] = i['properties']['lanes']
+                row['lanes'] = payload.iloc[i]['lanes']
 # - - - - - - - - - - - - - - - - - - - -
-            if i['properties']['ref'] is not None:
+            if payload.iloc[i]['ref'] is not None:
                 try:
-                    row['ref'] = str(i['properties']['ref'])
+                    row['ref'] = str(payload.iloc[i]['ref'])
                     row['ref'] = row['ref'].replace("'", "")
                 except Exception as ex:
                     logger.exception(ex)
                     continue
             else:
-                row['ref'] = i['properties']['ref']
+                row['ref'] = payload.iloc[i]['ref']
 # - - - - - - - - - - - - - - - - - - - -
-            if i['properties']['access'] is not None:
+            if payload.iloc[i]['access'] is not None:
                 try:
-                    row['access'] = str(i['properties']['access'])
+                    row['access'] = str(payload.iloc[i]['access'])
                     row['access'] = row['access'].replace("'", "")
                 except Exception as ex:
                     logger.exception(ex)
                     continue
             else:
-                row['access'] = i['properties']['access']
+                row['access'] = payload.iloc[i]['access']
 # - - - - - - - - - - - - - - - - - - - -
-            if i['properties']['bridge'] is not None:
+            if payload.iloc[i]['bridge'] is not None:
                 try:
-                    row['bridge'] = bool(i['properties']['bridge'])
+                    row['bridge'] = bool(payload.iloc[i]['bridge'])
                 except Exception as ex:
                     logger.exception(ex)
                     continue
             else:
-                row['bridge'] = i['properties']['bridge']
+                row['bridge'] = payload.iloc[i]['bridge']
 # - - - - - - - - - - - - - - - - - - - -
-            if i['properties']['tunnel'] is not None:
+            if payload.iloc[i]['tunnel'] is not None:
                 try:
-                    row['tunnel'] = bool(i['properties']['tunnel'])
+                    row['tunnel'] = bool(payload.iloc[i]['tunnel'])
                 except Exception as ex:
                     logger.exception(ex)
                     continue
             else:
-                row['tunnel'] = i['properties']['tunnel']
+                row['tunnel'] = payload.iloc[i]['tunnel']
 # - - - - - - - - - - - - - - - - - - - -
-            if i['properties']['width'] is not None:
+            if payload.iloc[i]['width'] is not None:
                 try:
-                    row['width'] = float(i['properties']['width'])
+                    row['width'] = float(payload.iloc[i]['width'])
+                    if math.isnan(row['width']):
+                        row['width'] = None
                 except Exception as ex:
                     logger.exception(ex)
                     continue
             else:
-                row['width'] = i['properties']['width']
+                row['width'] = payload.iloc[i]['width']
 # - - - - - - - - - - - - - - - - - - - -
-            if i['properties']['junction'] is not None:
+            if payload.iloc[i]['junction'] is not None:
                 try:
-                    row['junction'] = str(i['properties']['junction'])
+                    row['junction'] = str(payload.iloc[i]['junction'])
                     row['junction'] = row['junction'].replace("'", "")
                 except Exception as ex:
                     logger.exception(ex)
                     continue
             else:
-                row['junction'] = i['properties']['junction']
+                row['junction'] = payload.iloc[i]['junction']
             
             rows.append(row)
 
