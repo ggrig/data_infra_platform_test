@@ -36,7 +36,7 @@ class Ec2AthenaStack(Stack):
         super().__init__(scope, id, **kwargs)
 
         # Create a new VPC with public subnets
-        vpc = ec2.Vpc(self, "MyVpc",
+        vpc = ec2.Vpc(self, "TestVpc",
                       max_azs=2,
                       subnet_configuration=[
                           ec2.SubnetConfiguration(
@@ -67,7 +67,7 @@ class Ec2AthenaStack(Stack):
         sg.add_ingress_rule(ec2.Peer.any_ipv4(), ec2.Port.tcp(80), "Allow HTTP Access")
 
         # Launch an Amazon Linux EC2 instance
-        ec2.Instance(self, "MyInstance",
+        ec2.Instance(self, "TestInstance",
                      instance_type=ec2.InstanceType("t2.micro"),
                      machine_image=ec2.MachineImage.latest_amazon_linux(),
                      vpc=vpc,
