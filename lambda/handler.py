@@ -61,7 +61,7 @@ def fetch_and_append_state_data(area_name):
 
 STEP = 100
 
-def handler(event, context):
+def dataset_handler(event, context):
     logging.basicConfig(
         filename='log-main.log', 
         # encoding='utf-8', 
@@ -84,7 +84,33 @@ def handler(event, context):
 
     logger.info("Job completed")
 
-
-
-
     # return ret_error("The handler not implemented")
+    
+
+import json
+import urllib3
+
+def handler(event, context):
+    http = urllib3.PoolManager()
+    try:
+        response = http.request('GET', 'https://api.ipify.org?format=json')
+        status_code = response.status
+        if status_code == 200:
+            result = json.loads(response.data.decode('utf-8'))
+            return {
+                'statusCode': status_code,
+                'body': json.dumps({
+                    'message': 'Lambda has internet access.',
+                    'public_ip': result['ip']
+                })
+            }
+        else:
+            return {
+                'statusCode': status_code,
+                'body': json.dumps('Failed to access the internet.')
+            }
+    except Exception as e:
+        return {
+            'statusCode': 500,
+            'body': json.dumps(f'Exception: {str(e)}')
+        }
