@@ -1,9 +1,12 @@
+import time
 from BuchungWriter import BuchungWriter
 import osmnx as ox
 import geopandas as gpd
 import pandas as pd
 # import threading
 from multiprocessing import Pool
+
+THREADS_MAX_COUNT = 50
 
 import logging
 logger = logging.getLogger(__name__)
@@ -64,9 +67,9 @@ def fetch_and_append_state_data(area_name):
 #     t.start()
 #     return t
 
-def f(data):
+def write_to_athena(data):
     awq = BuchungWriter(context='')
-    awq.run(data)
+    return awq.run(data)
 
 if __name__ == '__main__':
     logging.basicConfig(
@@ -79,35 +82,34 @@ if __name__ == '__main__':
 
     # Iterate over the list of states and fetch data
     for area_name in areas:
+        
         data = fetch_and_append_state_data(area_name)
         logger.info(f'data length = {len(data)}')
+        
+        data = data.iloc[:5000]
+        
         i = 0
-        awq = BuchungWriter(context='')
+        values = []
+        while i < len(data):
+            value = data.iloc[i:i+50]
+            values.append(value)
+            i += 50
         
-# - - - - - - - - - -
-
-        # while i < len(data):
-        #     print(awq.run(data.iloc[i:i+50]))
-        #     i += 50
+        while len(values) > 0:
+            pool = Pool(processes=THREADS_MAX_COUNT)
+            start = time.time()
+            results = pool.map(write_to_athena, values)
+            pool.close()
+            pool.join()
+            end = time.time()
+            logger.info(f'Time taken in seconds with threadpool - {end - start}')
+            logger.info(results)
             
-# - - - - - - - - - -
-            
-        # threads = []
-        # while i < 5000:
-        #     t = open_new_thread(awq, data.iloc[i:i+50])
-        #     logger.info('thread open')
-        #     threads.append(t)
-        #     i += 50
-        
-        # for t in threads:
-        #     t.join()
-        #     logger.info('thread close')
-            
-# - - - - - - - - - -
-        
-        with Pool(processes=3) as pool:
-            values = [data.iloc[0:50], data.iloc[50:100], data.iloc[100:150], data.iloc[150:200], data.iloc[200:250], data.iloc[250:300]]
-            results = pool.map(f, values)
-            print(results)
+            new_values = []
+            for i in range(len(results)):
+                if results[i] == 500:
+                    new_values.append(values[i])
+            values = new_values
+            logger.info(f'values length = {len(values)}')
 
     logger.info("Job completed")

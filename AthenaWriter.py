@@ -42,8 +42,10 @@ def execute_athena_query(athena_client, query):
             results = athena_client.get_query_results(
                 QueryExecutionId=query_execution_id
             )
-            
             logger.info(f'Athena write SUCCEEDED {results}')
+            return 200
+        else:
+            return 500
 
     except Exception as ex:
         logger.error(f'{str(ex)}')
@@ -158,7 +160,7 @@ class AthenaWriter():
             #     return 400
             
             self.init_athena_client(self.context)
-            execute_athena_query(athena_client=self.athena_client, query=query)
+            return execute_athena_query(athena_client=self.athena_client, query=query)
 
         except Exception as ex:
             logger.error(str(ex))
