@@ -2,7 +2,8 @@ from BuchungWriter import BuchungWriter
 import osmnx as ox
 import geopandas as gpd
 import pandas as pd
-import threading
+# import threading
+from multiprocessing import Pool
 
 import logging
 logger = logging.getLogger(__name__)
@@ -57,11 +58,15 @@ def fetch_and_append_state_data(area_name):
     logger.info(f"{len(edges)}")
     return edges
 
-def open_new_thread(awq, data):
-    # awq = BuchungWriter(context='')
-    t = threading.Thread(target=awq.run, args=(data,))
-    t.start()
-    return t
+# def open_new_thread(awq, data):
+#     # awq = BuchungWriter(context='')
+#     t = threading.Thread(target=awq.run, args=(data,))
+#     t.start()
+#     return t
+
+def f(data):
+    awq = BuchungWriter(context='')
+    awq.run(data)
 
 if __name__ == '__main__':
     logging.basicConfig(
@@ -78,27 +83,31 @@ if __name__ == '__main__':
         logger.info(f'data length = {len(data)}')
         i = 0
         awq = BuchungWriter(context='')
+        
+# - - - - - - - - - -
+
         # while i < len(data):
         #     print(awq.run(data.iloc[i:i+50]))
         #     i += 50
             
-        threads = []
-        while i < 5000:
-            t = open_new_thread(awq, data.iloc[i:i+50])
-            logger.info('thread open')
-            threads.append(t)
-            i += 50
+# - - - - - - - - - -
+            
+        # threads = []
+        # while i < 5000:
+        #     t = open_new_thread(awq, data.iloc[i:i+50])
+        #     logger.info('thread open')
+        #     threads.append(t)
+        #     i += 50
         
-        for t in threads:
-            t.join()
-            logger.info('thread close')
+        # for t in threads:
+        #     t.join()
+        #     logger.info('thread close')
+            
+# - - - - - - - - - -
         
-        # t1 = threading.Thread(target=awq.run, args=(data.iloc[:50],))
-        # t1 = open_new_thread(awq, data.iloc[:50])
-        # t2 = open_new_thread(awq, data.iloc[50:100])
-        # t3 = open_new_thread(awq, data.iloc[100:150])
-        # t1.join()
-        # t2.join()
-        # t3.join()
+        with Pool(processes=3) as pool:
+            values = [data.iloc[0:50], data.iloc[50:100], data.iloc[100:150], data.iloc[150:200], data.iloc[200:250], data.iloc[250:300]]
+            results = pool.map(f, values)
+            print(results)
 
     logger.info("Job completed")
