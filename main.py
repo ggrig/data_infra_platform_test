@@ -6,7 +6,8 @@ import pandas as pd
 # import threading
 from multiprocessing import Pool
 
-THREADS_MAX_COUNT = 50
+QUERY_VALUES_SIZE = 100
+THREADS_MAX_COUNT = 100
 
 import logging
 logger = logging.getLogger(__name__)
@@ -45,7 +46,7 @@ def fetch_and_append_state_data(area_name):
     try:
         
         # Fetch the graph data for each state
-        graph = ox.graph_from_place(area_name, network_type='all')
+        graph = ox.graph_from_place(area_name, network_type='drive')
         nodes, edges = ox.graph_to_gdfs(graph)
 
         # Save combined data to CSV files
@@ -86,14 +87,14 @@ if __name__ == '__main__':
         data = fetch_and_append_state_data(area_name)
         logger.info(f'data length = {len(data)}')
         
-        data = data.iloc[:5000]
+        # data = data.iloc[:5000]
         
         i = 0
         values = []
         while i < len(data):
-            value = data.iloc[i:i+50]
+            value = data.iloc[i:i+QUERY_VALUES_SIZE]
             values.append(value)
-            i += 50
+            i += QUERY_VALUES_SIZE
         
         while len(values) > 0:
             pool = Pool(processes=THREADS_MAX_COUNT)
