@@ -66,11 +66,33 @@ class Ec2AthenaStack(Stack):
         sg.add_ingress_rule(ec2.Peer.any_ipv4(), ec2.Port.tcp(22), "Allow SSH Access")
         sg.add_ingress_rule(ec2.Peer.any_ipv4(), ec2.Port.tcp(80), "Allow HTTP Access")
 
-        # Launch an Amazon Linux EC2 instance
-        ec2.Instance(self, "TestInstance",
-                     instance_type=ec2.InstanceType("t2.micro"),
-                     machine_image=ec2.MachineImage.latest_amazon_linux(),
-                     vpc=vpc,
-                     role=instance_role,
-                     security_group=sg,
-                     key_name="hgrig-key")
+        # # Launch an Amazon Linux EC2 instance
+        # micro_ec2 = ec2.Instance(self, "TestInstance",
+        #              instance_type=ec2.InstanceType("t2.micro"),
+        #              machine_image=ec2.MachineImage.latest_amazon_linux(),
+        #              vpc=vpc,
+        #              role=instance_role,
+        #              security_group=sg,
+        #              key_name="hgrig-key")
+
+        # Create the EC2 instance
+        large_ec2 = ec2.Instance(self, "LargeTestInstance",
+            instance_type=ec2.InstanceType("t2.large"),
+            machine_image=ec2.AmazonLinuxImage(),
+            vpc=vpc,
+            role=instance_role,
+            security_group=sg,
+            key_name="hgrig-key",
+            user_data=ec2.UserData.custom('''
+                #!/bin/bash
+                yum update -y
+                yum install -y git
+                yum -y install gcc glibc-devel make which
+                yum -y install python38 python38-devel
+                curl -O https://bootstrap.pypa.io/get-pip.py
+                python3 get-pip.py --user
+                curl "https://awscli.amazonaws.com/awscli-exe-linux-x86_64.zip" -o "awscliv2.zip"
+                unzip awscliv2.zip
+                sudo ./aws/install
+            ''')
+        )

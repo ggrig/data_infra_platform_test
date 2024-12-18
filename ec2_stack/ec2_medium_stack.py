@@ -25,7 +25,7 @@ class EC2WithAthenaAccessStack(Stack):
 
         # Create the EC2 instance
         instance = ec2.Instance(self, "MyInstance",
-            instance_type=ec2.InstanceType("x2gd.medium"),
+            instance_type=ec2.InstanceType("t2.large"),
             machine_image=ec2.AmazonLinuxImage(),
             vpc=vpc,
             role=role,
@@ -33,7 +33,10 @@ class EC2WithAthenaAccessStack(Stack):
                 #!/bin/bash
                 yum update -y
                 yum install -y git
-                amazon-linux-extras install python3.8 -y
+                yum -y install gcc glibc-devel make which
+                yum -y install python38 python38-devel
+                curl -O https://bootstrap.pypa.io/get-pip.py
+                python3 get-pip.py --user
                 curl "https://awscli.amazonaws.com/awscli-exe-linux-x86_64.zip" -o "awscliv2.zip"
                 unzip awscliv2.zip
                 sudo ./aws/install
