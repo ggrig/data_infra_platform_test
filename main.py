@@ -14,9 +14,9 @@ logger = logging.getLogger(__name__)
 
 # List of states to retrieve data for
 areas = [
-    # "New York, New York, USA",
+    # "SF, CA, USA",    
+    "New York, New York, USA",
     # "LA, CA, USA",
-    "SF, CA, USA",
     # "Chicago, IL, USA",
     # "Houston, TX, USA",
     # "Philadelphia[d], PA, USA",
