@@ -3,11 +3,12 @@ import os
 
 import aws_cdk as cdk
 
-from ec2_stack.ec2_stack import Ec2AthenaStack
+# from ec2_stack.ec2_stack import Ec2AthenaStack
+from ec2_stack.ec2_medium_stack import EC2WithAthenaAccessStack
 
 
 app = cdk.App()
-Ec2AthenaStack(app, "Ec2AthenaStack",
+EC2WithAthenaAccessStack(app, "EC2WithAthenaAccessStack",
     # If you don't specify 'env', this stack will be environment-agnostic.
     # Account/Region-dependent features and context lookups will not work,
     # but a single synthesized template can be deployed anywhere.
