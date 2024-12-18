@@ -30,7 +30,7 @@ def execute_athena_query(athena_client, query):
             if query_status == 'FAILED':
                 logger.error("Query execution failed.")
                 logger.error(response['QueryExecution']['Status']['AthenaError']['ErrorMessage'])
-                logger.error(query)
+                # logger.error(query)
                 break
             if query_status == 'CANCELLED':
                 logger.info("Query execution  was cancelled.")
