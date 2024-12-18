@@ -11,7 +11,7 @@ from dotenv import load_dotenv
 load_dotenv(override=True)
 
 def execute_athena_query(athena_client, query):
-    logger.debug(f'query = {query}')
+    # logger.info(f'query = {query}')
     try:
         # Execute the query
         response = athena_client.start_query_execution(
@@ -30,7 +30,7 @@ def execute_athena_query(athena_client, query):
             if query_status == 'FAILED':
                 logger.error("Query execution failed.")
                 logger.error(response['QueryExecution']['Status']['AthenaError']['ErrorMessage'])
-                logger.error(query)
+                # logger.error(query)
                 break
             if query_status == 'CANCELLED':
                 logger.info("Query execution  was cancelled.")
@@ -42,8 +42,10 @@ def execute_athena_query(athena_client, query):
             results = athena_client.get_query_results(
                 QueryExecutionId=query_execution_id
             )
-            
             logger.info(f'Athena write SUCCEEDED {results}')
+            return 200
+        else:
+            return 500
 
     except Exception as ex:
         logger.error(f'{str(ex)}')
@@ -128,13 +130,13 @@ class AthenaWriter():
     #     logger.error(f'Timed Out Query: {execution_id} status: {status}')
     #     return False
  
-    def payload_to_rows(self, payload:list):
+    def payload_to_rows(self, payload):
             return payload
     
     def build_the_query(self, rows:list):
         return 'select current_date;', 0
     
-    def run(self, payload:list):
+    def run(self, payload):
         rows = self.payload_to_rows(payload = payload)
         query, count = self.build_the_query(rows = rows)
 
@@ -158,7 +160,7 @@ class AthenaWriter():
             #     return 400
             
             self.init_athena_client(self.context)
-            execute_athena_query(athena_client=self.athena_client, query=query)
+            return execute_athena_query(athena_client=self.athena_client, query=query)
 
         except Exception as ex:
             logger.error(str(ex))

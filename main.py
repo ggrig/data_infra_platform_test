@@ -1,7 +1,13 @@
+import time
 from BuchungWriter import BuchungWriter
 import osmnx as ox
 import geopandas as gpd
 import pandas as pd
+# import threading
+from multiprocessing import Pool
+
+QUERY_VALUES_SIZE = 100
+THREADS_MAX_COUNT = 100
 
 import logging
 logger = logging.getLogger(__name__)
@@ -35,9 +41,9 @@ def transform_string(original_string):
 # Function to fetch and append data for each state
 def fetch_and_append_state_data(area_name):
     logger.info(f"Fetching data for {area_name}")
+    nodes = []
+    edges = []
     try:
-        nodes = []
-        edges = []
         
         # Fetch the graph data for each state
         graph = ox.graph_from_place(area_name, network_type='drive')
@@ -48,16 +54,27 @@ def fetch_and_append_state_data(area_name):
         # edges.to_csv(transform_string(area_name) + '_edges.csv', index=False)
 
         logger.info(f"Finished fetching data for {area_name}")
-        return edges
+
 
     except Exception as e:
         logger.error(f"An error occurred while fetching data for {area_name}: {e}")
 
-STEP = 100
+    logger.info(f"{len(edges)}")
+    return edges
+
+# def open_new_thread(awq, data):
+#     # awq = BuchungWriter(context='')
+#     t = threading.Thread(target=awq.run, args=(data,))
+#     t.start()
+#     return t
+
+def write_to_athena(data):
+    awq = BuchungWriter(context='')
+    return awq.run(data)
 
 if __name__ == '__main__':
     logging.basicConfig(
-        filename='log-main.log', 
+        filename='log-main_fv.log', 
         # encoding='utf-8', 
         level=logging.INFO,
         format='%(asctime)s %(levelname)-8s %(message)s',
@@ -66,14 +83,34 @@ if __name__ == '__main__':
 
     # Iterate over the list of states and fetch data
     for area_name in areas:
-        data = fetch_and_append_state_data(area_name).to_geo_dict()['features']
+        
+        data = fetch_and_append_state_data(area_name)
         logger.info(f'data length = {len(data)}')
-        x = 0
-        awq = BuchungWriter(context='')
-        while x+STEP < len(data):
-            logger.info(awq.run(data[x:x+STEP]))
-            x += STEP
-            # logger.info('\n\n\n-------------------------------------------------------\n\n\n')
-            logger.info(f"{x}")
+        
+        # data = data.iloc[:5000]
+        
+        i = 0
+        values = []
+        while i < len(data):
+            value = data.iloc[i:i+QUERY_VALUES_SIZE]
+            values.append(value)
+            i += QUERY_VALUES_SIZE
+        
+        while len(values) > 0:
+            pool = Pool(processes=THREADS_MAX_COUNT)
+            start = time.time()
+            results = pool.map(write_to_athena, values)
+            pool.close()
+            pool.join()
+            end = time.time()
+            logger.info(f'Time taken in seconds with threadpool - {end - start}')
+            logger.info(results)
+            
+            new_values = []
+            for i in range(len(results)):
+                if results[i] == 500:
+                    new_values.append(values[i])
+            values = new_values
+            logger.info(f'values length = {len(values)}')
 
     logger.info("Job completed")
