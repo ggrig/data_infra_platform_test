@@ -62,3 +62,11 @@ Enjoy!
 ```
 ssh -i ~/.ssh-keys/hgrig-key.pem ec2-user@ec2-54-245-18-16.us-west-2.compute.amazonaws.com
 ```
+
+
+# References
+
+[Getting started with AWS Glue interactive sessions](https://docs.aws.amazon.com/glue/latest/dg/interactive-sessions.html)
+[Author AWS Glue jobs with PyCharm Using AWS Glue Interactive Sessions](https://www.youtube.com/watch?v=04LMQxDxjGM&list=PL7bE4nSzLSWeYCSb-WekhEXzRcI5Fu6Hu&ab_channel=DataEngUncomplicated)
+[AWS Glue: Write Parquet With Partitions to AWS S3](https://www.youtube.com/watch?v=Pr4DNEq19EM&ab_channel=DataEngUncomplicated)
+[Getting Started with Jupyter Notebooks in VS Code](https://www.youtube.com/watch?v=suAkMeWJ1yE&ab_channel=VisualStudioCode)
