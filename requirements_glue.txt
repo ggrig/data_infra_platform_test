@@ -1,3 +1,5 @@
 jupyter 
 boto3 
 aws-glue-sessions
+# ipykernel
+# pyspark

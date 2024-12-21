@@ -71,3 +71,4 @@ ssh -i ~/.ssh-keys/hgrig-key.pem ec2-user@ec2-54-245-18-16.us-west-2.compute.ama
 [AWS Glue: Write Parquet With Partitions to AWS S3](https://www.youtube.com/watch?v=Pr4DNEq19EM&ab_channel=DataEngUncomplicated)  
 [Getting Started with Jupyter Notebooks in VS Code](https://www.youtube.com/watch?v=suAkMeWJ1yE&ab_channel=VisualStudioCode)  
 [How to install and run Pyspark locally integrated with VSCode via Jupyter Notebook (on Windows).](https://medium.com/@marcelopedronidasilva/how-to-install-and-run-pyspark-locally-integrated-with-vscode-via-jupyter-notebook-on-windows-ff209ac8621f)  
+[Introducing AWS Glue interactive sessions for Jupyter](https://aws.amazon.com/blogs/big-data/introducing-aws-glue-interactive-sessions-for-jupyter/)  
