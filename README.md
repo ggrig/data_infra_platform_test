@@ -72,3 +72,4 @@ ssh -i ~/.ssh-keys/hgrig-key.pem ec2-user@ec2-54-245-18-16.us-west-2.compute.ama
 [Getting Started with Jupyter Notebooks in VS Code](https://www.youtube.com/watch?v=suAkMeWJ1yE&ab_channel=VisualStudioCode)  
 [How to install and run Pyspark locally integrated with VSCode via Jupyter Notebook (on Windows).](https://medium.com/@marcelopedronidasilva/how-to-install-and-run-pyspark-locally-integrated-with-vscode-via-jupyter-notebook-on-windows-ff209ac8621f)  
 [Introducing AWS Glue interactive sessions for Jupyter](https://aws.amazon.com/blogs/big-data/introducing-aws-glue-interactive-sessions-for-jupyter/)  
+[AWS Glue Job Import Libraries Explained (And Why We Need Them)](https://www.youtube.com/watch?v=-Vdgkg-UqfY&list=PL7bE4nSzLSWeYCSb-WekhEXzRcI5Fu6Hu&index=3&ab_channel=DataEngUncomplicated)
